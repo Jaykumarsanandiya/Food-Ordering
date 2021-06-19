@@ -25,28 +25,26 @@ include("database.inc.php");
     <body>
         <div class="slider-area">
             <div class="slider-active owl-dot-style owl-carousel">
-                <div class="single-slider pt-210 pb-220 bg-img" style="background-image:url(assets/img/slider/slider-1.jpg);">
+            
+            <?php
+            $banner_res= mysqli_query($con,"select * from banner where status=1 ");
+            while($banner_row = mysqli_fetch_assoc($banner_res)){
+            ?>
+                <div class="single-slider pt-210 pb-220 bg-img" style="background-image:url(<?php echo SITE_BANNER.$banner_row['image'] ?>);">
                     <div class="container">
                         <div class="slider-content slider-animated-1">
-                            <h1 class="animated">Drink & Heathy Food</h1>
-                            <h3 class="animated">Fresh Heathy and Organic.</h3>
+                            <h1 class="animated"><?php echo $banner_row['heading'] ?> </h1>
+                            <h3 class="animated"><?php echo  $banner_row['sub_heading'] ?></h3>
                             <div class="slider-btn mt-90">
                                 <a class="animated" href="shop.php">Order Now</a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="single-slider pt-210 pb-220 bg-img" style="background-image:url(assets/img/slider/slider-2.jpg);">
-                    <div class="container">
-                        <div class="slider-content slider-animated-1">
-                            <h1 class="animated">Drink & Heathy Food</h1>
-                            <h3 class="animated">Fresh Heathy and Organic.</h3>
-                            <div class="slider-btn mt-90">
-                                <a class="animated" href="shop.php">Order Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <?php
+            }
+                ?>
+                
             </div>
         </div>
         <script src="assets/js/vendor/jquery-1.12.0.min.js"></script>
