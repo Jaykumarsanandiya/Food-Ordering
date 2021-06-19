@@ -5317,3 +5317,9 @@ h5.panel-title span {
 .category_list .active{
     color:#e02c2b;
 }
+
+.category_list .checkboxclass{
+    width: 22px;
+    height: 19px;
+    margin-inline: 10px;
+}
