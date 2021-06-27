@@ -1,17 +1,20 @@
 <?php
 
 include("header.php");
-$category_id = "";
+
 $catDish="";   // checkbox feature
+$catDish_arr=array();
+
 if(isset($_GET['CatDish'])){
     $catDish = $_GET['CatDish'];
+    $catDish_arr = array_filter( explode(':',$catDish) ) ;
+    $catDish_arr_str = implode(',',$catDish_arr);
+   
+ 
 
 }
 
-if (isset($_GET['cat_id']) && $_GET['cat_id'] > 0) {
-    $category_id = get_safe_value($_GET['cat_id']);  // primary key of category id
 
-}
 ?>
 <div class="breadcrumb-area gray-bg">
     <div class="container">
@@ -35,13 +38,21 @@ if (isset($_GET['cat_id']) && $_GET['cat_id'] > 0) {
 
 
                             <?php
-                            if ($category_id == "") {
-                                // show all dishes
-                                $dish_sql = "select * from dish where status=1 order by dish";
-                            } else {
-                                // show specific dishes according to categoty id
-                                $dish_sql = "select * from dish where status=1 and category_id=$category_id order by dish";
+                           
+                            $dish_sql = "select * from dish where status=1 ";
+                            if (isset($_GET['CatDish']) && $_GET['CatDish'] !='') {
+                                $dish_sql .= " and category_id in ($catDish_arr_str)" ;  // primary key of category id
+                            
                             }
+                            $dish_sql .= "order by dish";
+
+                            // if ($category_id == "") {
+                            //     // show all dishes
+                            //     $dish_sql = "select * from dish where status=1 order by dish";
+                            // } else {
+                            //     // show specific dishes according to categoty id
+                            //     $dish_sql = "select * from dish where status=1 and category_id in $category_id order by dish";
+                            // }
 
                             $dish_res = mysqli_query($con, $dish_sql);
                             $dish_count = mysqli_num_rows($dish_res);
@@ -59,7 +70,7 @@ if (isset($_GET['cat_id']) && $_GET['cat_id'] > 0) {
                                                 <!-- <a href="product-details.html">
                                                     <img src="assets/img/product/product-1.jpg" alt="">
                                                 </a> -->
-                                                <a target="_blank" href="<?= SITE_IMAGE . $dish_roww['image'] ?>">
+                                                <a target="_blank" href="<?= SITE_IMAGE . $dish_row['image'] ?>">
                                                     <img class="bigImage" src="<?php echo  SITE_IMAGE . $dish_row['image'] ?>">
                                                 </a>
                                             </div>
@@ -68,6 +79,15 @@ if (isset($_GET['cat_id']) && $_GET['cat_id'] > 0) {
                                                     <a href="javascript:void(0)"><?php echo $dish_row['dish'] ?></a>
                                                 </h4>
                                                 <div class="product-price-wrapper">
+                                                <?php 
+                                                $dish_attr_res = mysqli_query($con,"select * from dish_details where status='1' and id ='" . $dish_row['id'] ."'");
+                                                while($dish_attr_row = mysqli_fetch_row($dish_attr_res)){
+                                                    pr($dish_attr_row);
+                                                }
+                                                
+                                                
+                                                ?>
+
                                                     <span>$100.00</span>
                                                 </div>
                                             </div>
@@ -96,15 +116,19 @@ if (isset($_GET['cat_id']) && $_GET['cat_id'] > 0) {
                         <div class="shop-catigory">
 
 
-
-                            <ul id="faq" class="category_list"> <?php
+                            
+                            <ul id="faq" class="category_list">
+                            <a href="shop.php"><u>Clear</u></a>
+                             <?php
 
                                                                 while ($cat_row = mysqli_fetch_assoc($cat_res)) {
                                                                     $class = "selected";
-                                                                    if ($category_id == $cat_row['id']) {
-                                                                        $class = "active";
+                                                                   
+                                                                    $is_checked="";
+                                                                    if(in_array($cat_row['id'],$catDish_arr)){
+                                                                        $is_checked="checked='checked'";
                                                                     }
-  echo "<li  >   <input type='checkbox' onclick=set_checkbox('". $cat_row['id']."') class='checkboxclass' name='cat_arr[]' value='" . $cat_row['id'] ."'>" . $cat_row['category'] . "</li>";
+  echo "<li  >   <input $is_checked type='checkbox' onclick=set_checkbox('". $cat_row['id']."') class='checkboxclass' name='cat_arr[]' value='" . $cat_row['id'] ."'>" . $cat_row['category'] . "</li>";
                                                                 }
                                                                 ?> 
                             </ul>
@@ -122,7 +146,18 @@ if (isset($_GET['cat_id']) && $_GET['cat_id'] > 0) {
 <script>
     function set_checkbox(id){
       var Text = jQuery('#CatDish').val();
-        Text = Text +":"+id;
+      var check = Text.search(":"+id);
+       
+      
+
+        if(check==-1){
+     
+             // user selected for first time, means user want to select this option
+             Text = Text +":"+id;
+        }else{
+                  // means already exist that id , so user want to deselect that option(i.e menu / id)
+              Text =  Text.replace(":"+id,'');
+        }
         jQuery('#CatDish').val(Text) ;
         jQuery('#frmCatDish')[0].submit();
     }
