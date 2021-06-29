@@ -78,17 +78,29 @@ if(isset($_GET['CatDish'])){
                                                 <h4>
                                                     <a href="javascript:void(0)"><?php echo $dish_row['dish'] ?></a>
                                                 </h4>
-                                                <div class="product-price-wrapper">
+                                                <div class="product-price-wrapper" id="dish_detail">
                                                 <?php 
-                                                $dish_attr_res = mysqli_query($con,"select * from dish_details where status='1' and id ='" . $dish_row['id'] ."'");
+                                                $dish_attr_res = mysqli_query($con,"select * from dish_details where status='1' and dish_id ='" . $dish_row['id'] ."'");
+
+
                                                 while($dish_attr_row = mysqli_fetch_row($dish_attr_res)){
-                                                    pr($dish_attr_row);
+                                                    // pr($dish_attr_row[2]);   for  learning purpose
+                                                    ?> 
+                                                    <div> <?php
+                                                    echo "<input type='radio' class='dish_radio' name='raio_". $dish_row['id']."' value='".$dish_row['id']."' >"  . $dish_attr_row[2]  ;
+                                                    echo "&nbsp; &nbsp;";
+                                                    echo  $dish_attr_row[3] ;
+                                                    echo "&nbsp; &nbsp;&nbsp;&nbsp;";
+                                                   ?> </div><?php
+                                                   
+                                                   
+                                                     
                                                 }
                                                 
                                                 
                                                 ?>
 
-                                                    <span>$100.00</span>
+                                                   
                                                 </div>
                                             </div>
                                         </div>
