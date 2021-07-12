@@ -74,8 +74,11 @@ include("database.inc.php");
                     </div>
                     <div class="col-lg-9 col-md-8 col-12 col-sm-8">
                         <div class="header-middle-right f-right">
+
+
+
                             <div class="header-login">
-                                <a href="login-register.php">
+                                <a href="login_register.php">
                                     <div class="header-icon-style">
                                         <i class="icon-user icons"></i>
                                     </div>
@@ -84,6 +87,9 @@ include("database.inc.php");
                                     </div>
                                 </a>
                             </div>
+
+
+
                             <div class="header-wishlist">
                                 &nbsp;
                             </div>
